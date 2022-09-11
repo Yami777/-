@@ -1,5 +1,6 @@
 // user.js划分是根据后端接口文档划分的
 import request from '@/utils/request'
+
 /**
  *
  * @param {String} mobile 手机号
@@ -26,5 +27,18 @@ export const login = (mobile, code) => {
 export const senCodeAPI = (mobile) => {
   return request({
     url: `/v1_0/sms/codes/${mobile}`
+  })
+}
+
+/**
+ * 获取用户信息
+ * @returns Promise
+ */
+export const getUserInfo = () => {
+  return request({
+    url: '/v1_0/user'
+    // headers: {
+    //   Authorization: `Bearer ${store.state.tokenObj.token}`
+    // }
   })
 }
