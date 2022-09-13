@@ -9,26 +9,44 @@
       </template>
     </van-nav-bar>
     <!-- 频道及展示区域 -->
-    <van-tabs swipeable>
+    <van-tabs swipeable v-model="active">
       <van-tab :title="item.name" v-for="item in channels" :key="item.id">
         <!-- 文章详情-->
         <article-list :id="item.id"></article-list>
       </van-tab>
-      <span class="toutiao toutiao-gengduo"></span>
+      <span class="toutiao toutiao-gengduo" @click="isShow = true"></span>
     </van-tabs>
+
+    <!-- 弹出层 -->
+    <van-popup
+      v-model="isShow"
+      position="bottom"
+      :style="{ height: '100%' }"
+      closeable
+      close-icon-position="top-left"
+    >
+      <channel-edit
+        :myChannels="channels"
+        @change-active=";[(isShow = false), (active = $event)]"
+      ></channel-edit>
+    </van-popup>
   </div>
 </template>
 
 <script>
 import ArticleList from '@/views/Home/components/ArticleList.vue'
+import ChannelEdit from './components/ChannelEdit.vue'
 import { getChannelAPI } from '@/api'
 export default {
   components: {
-    ArticleList
+    ArticleList,
+    ChannelEdit
   },
   data() {
     return {
-      channels: []
+      active: 0,
+      channels: [],
+      isShow: false
     }
   },
   created() {
