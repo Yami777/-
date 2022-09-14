@@ -22,7 +22,7 @@
           :text="item.name"
           :icon="isEdit && item.name !== '推荐' ? 'cross' : ''"
           :class="{ active: item.name === '推荐' }"
-          @click="handleMyChannel(item.name, index)"
+          @click="handleMyChannel(item, index)"
         >
         </van-grid-item>
       </van-grid>
@@ -38,6 +38,7 @@
           :key="item.id"
           :text="item.name"
           icon="plus"
+          @click="$emit('add-channel', item)"
         >
         </van-grid-item>
       </van-grid>
@@ -81,11 +82,13 @@ export default {
         console.log(error)
       }
     },
-    handleMyChannel(name, index) {
+    handleMyChannel({ name, id }, index) {
       if (this.isEdit && name !== '推荐') {
-        console.log('删除频道')
+        // console.log('删除频道')
+        this.$emit('del-channel', id)
       } else {
-        console.log(55)
+        // 1、关闭弹窗
+        // 2、切换频道
         this.$emit('change-active', index)
       }
     }
