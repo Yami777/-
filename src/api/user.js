@@ -42,3 +42,19 @@ export const getUserInfo = () => {
     // }
   })
 }
+
+/**
+ * 上传图片
+ * @param {*} file 裁剪过后的图片的file对象
+ * @returns
+ */
+// 当传的是表单数据的时候自动添加请求头
+export const uploadPhoto = (file) => {
+  const fm = new FormData()
+  fm.append('photo', file)
+  return request({
+    url: '/v1_0/user/photo',
+    method: 'PATCH',
+    data: fm
+  })
+}
