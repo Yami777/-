@@ -17,8 +17,8 @@ export default new Vuex.Store({
     createPersistentStore({
       key: 'HEIMA_TOUTIAO',
       // storage: window.sessionStorage,
-      reducer({ tokenObj, myChannels, histories }) {
-        return { tokenObj, myChannels, histories }
+      reducer({ tokenObj, myChannels, histories, commentsArr }) {
+        return { tokenObj, myChannels, histories, commentsArr }
       }
     })
   ],
@@ -27,7 +27,8 @@ export default new Vuex.Store({
     //   JSON.parse(window.localStorage.getItem('HEIMATOUTIAO_TOKEN')) || {}
     tokenObj: {},
     myChannels: [],
-    histories: []
+    histories: [],
+    commentsArr: []
   },
   getters: {
     isLogin(state) {
@@ -37,10 +38,6 @@ export default new Vuex.Store({
   mutations: {
     SET_TOKEN(state, token) {
       state.tokenObj = token
-      // window.localStorage.setItem(
-      //   'HEIMATOUTIAO_TOKEN',
-      //   JSON.stringify(state.tokenObj)
-      // )
     },
     /**
      *
@@ -57,5 +54,8 @@ export default new Vuex.Store({
     SET_HISTORIES(state, histories) {
       state.histories = histories
     }
+    // SET_COMMENT(state, comments) {
+    //   state.commentsArr.push(comments)
+    // }
   }
 })

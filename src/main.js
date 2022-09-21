@@ -8,7 +8,7 @@ import Vant from 'vant'
 import 'vant/lib/index.css'
 // 引入flexible
 import 'amfe-flexible'
-
+import 'github-markdown-css'
 Vue.use(Vant)
 Vue.config.productionTip = false
 

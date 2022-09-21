@@ -58,3 +58,51 @@ export const uploadPhoto = (file) => {
     data: fm
   })
 }
+
+/**
+ * 获取用户信息
+ * @returns Promise
+ */
+export const getUserMsgAPI = () => {
+  return request({
+    url: '/v1_0/user/profile'
+  })
+}
+
+/**
+ * 编辑用户资料
+ * @returns Promise
+ */
+export const editUserMsgAPI = (data) => {
+  return request({
+    url: '/v1_0/user/profile',
+    method: 'PATCH',
+    data
+  })
+}
+/**
+ * 关注用户
+ * @param {String} id 作者的id
+ * @returns
+ */
+export const focusUserAPI = (id) => {
+  return request({
+    url: '/v1_0/user/followings',
+    method: 'POST',
+    data: {
+      target: id
+    }
+  })
+}
+
+/**
+ * 取消关注
+ * @param {String} autId 作者id
+ * @returns
+ */
+export const cancelFocusAPI = (autId) => {
+  return request({
+    url: `/v1_0/user/followings/${autId}`,
+    method: 'DELETE'
+  })
+}

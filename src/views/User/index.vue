@@ -9,33 +9,81 @@
     />
 
     <!-- 信息修改 -->
-    <!-- 更新头像 -->
-    <!-- 文件选择框 -->
-    <!-- document.querySelector().click() -->
-    <input
-      type="file"
-      hidden
-      ref="file"
-      accept=".png,.pdf,.jpg"
-      @change="selectPhoto"
-    />
-    <van-cell is-link title="头像" @click="$refs.file.click()">
-      <van-image round width="0.8rem" height="0.8rem" :src="avator" />
-    </van-cell>
-    <!-- 更新头像的弹出层 -->
-    <van-popup
-      v-model="isShowPhoto"
-      closeable
-      position="bottom"
-      :style="{ height: '100%' }"
-    >
-      <!-- 组件随着弹出层的弹出创建和隐藏，每次弹出都重新创建组件 -->
-      <update-avator
-        v-if="isShowPhoto"
-        :photo="photo"
-        :avator.sync="avator"
-      ></update-avator>
-    </van-popup>
+    <div>
+      <!-- 更新头像 -->
+      <!-- 文件选择框 -->
+      <!-- document.querySelector().click() -->
+      <input
+        type="file"
+        hidden
+        ref="file"
+        accept=".png,.pdf,.jpg"
+        @change="selectPhoto"
+      />
+      <van-cell is-link title="头像" @click="$refs.file.click()">
+        <van-image round width="0.8rem" height="0.8rem" :src="avator" />
+      </van-cell>
+      <!-- 更新头像的弹出层 -->
+      <van-popup
+        v-model="isShowPhoto"
+        closeable
+        position="bottom"
+        :style="{ height: '100%' }"
+      >
+        <!-- 组件随着弹出层的弹出创建和隐藏，每次弹出都重新创建组件 -->
+        <update-avatar
+          v-if="isShowPhoto"
+          :photo="photo"
+          :avator.sync="avator"
+        ></update-avatar>
+      </van-popup>
+    </div>
+    <!-- 更新用户昵称 -->
+    <div>
+      <van-cell
+        is-link
+        title="昵称"
+        :value="userName"
+        @click="isShowName = true"
+      ></van-cell>
+      <!-- 用户昵称弹出层 -->
+      <van-popup
+        v-model="isShowName"
+        :style="{ height: '100%' }"
+        position="bottom"
+      >
+        <update-name v-model="userName"></update-name>
+      </van-popup>
+    </div>
+    <!-- 更新用户性别 -->
+    <div>
+      <van-cell is-link title="性别" @click="isShowSex = true">{{
+        genderNum ? '女' : '男'
+      }}</van-cell>
+      <van-popup
+        v-model="isShowSex"
+        :style="{ height: '30%' }"
+        position="bottom"
+      >
+        <update-gender v-model="genderNum"></update-gender>
+      </van-popup>
+    </div>
+    <!-- 更新用户生日 -->
+    <div>
+      <van-cell
+        is-link
+        title="生日"
+        :value="birthday"
+        @click="isShowBirthday = true"
+      ></van-cell>
+      <van-popup
+        v-model="isShowBirthday"
+        :style="{ height: '30%' }"
+        position="bottom"
+      >
+        <update-birth v-model="birthday"></update-birth>
+      </van-popup>
+    </div>
   </div>
 </template>
 
@@ -52,18 +100,36 @@
 // fr.readAsDataURL（file）
 // 接收读取的结果：异步读取，监听onload事件：fr.onload=（e）=>{e.target.result/*base64*/}
 import { resolveToBase64 } from '@/utils/index'
-import UpdateAvator from './components/UpdateAvator.vue'
+
+import UpdateName from './components/UpdateName.vue'
+import UpdateGender from './components/UpdateGender.vue'
+import UpdateAvatar from './components/UpdateAvatar.vue'
+import UpdateBirth from './components/UpdateBirth.vue'
+import { getUserMsgAPI } from '@/api'
 
 export default {
   components: {
-    UpdateAvator
+    UpdateAvatar,
+    UpdateName,
+    UpdateGender,
+    UpdateBirth
   },
   data() {
     return {
       isShowPhoto: false,
+      isShowName: false,
+      isShowSex: false,
+      isShowBirthday: false,
       photo: '',
-      avator: ''
+      avator: '',
+      userName: '',
+      gender: '',
+      genderNum: '',
+      birthday: ''
     }
+  },
+  created() {
+    this.getUserMsg()
   },
   methods: {
     async selectPhoto() {
@@ -79,6 +145,23 @@ export default {
       this.isShowPhoto = true
       // 解决不能连续选中同一张图片
       this.$refs.file.value = ''
+    },
+    async getUserMsg() {
+      // console.log(1)
+      try {
+        const { data } = await getUserMsgAPI()
+        // console.log(data)
+        this.avator = data.data.photo
+        this.userName = data.data.name
+        this.genderNum = data.data.gender
+        this.birthday = data.data.birthday
+      } catch (error) {
+        if (error.response && error.response.status === 401) {
+          this.$toast.fail('登录失效，请重新登录')
+        } else {
+          throw error
+        }
+      }
     }
   }
 }
